@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package ml_api;
+
+message UploadDataRequest {
+  string token = 1;
+  repeated bytes file_data = 2;
+  repeated string base64_data = 3;
+}
+
+message UploadDataResponse {
+  string upload_id = 1;
+}
+
+message GetStatusRequest {
+  string token = 1;
+}
+
+message GetStatusResponse {
+  string status = 1;
+}
+
+enum ActionType {
+  PREDICT = 0;
+  TRAIN = 1;
+}
+
+message ActionRequest {
+  string token = 1;
+  ActionType action_type = 2;
+  string payload = 3;
+}
+
+message ActionResponse {
+  string status = 1;
+  string response =2;
+}
+
+enum FileType {
+  LOG = 0;
+  CHECKPOINT = 1;
+}
+
+message DownloadRequest {
+  string token = 1;
+  FileType file_type = 2;
+  string upload_id = 3;
+}
+
+message DownloadResponse {
+  bytes chunk_data = 1;
+}
+
+service MLService {
+  rpc UploadData(UploadDataRequest) returns (UploadDataResponse);
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+  rpc Action(ActionRequest) returns (ActionResponse);
+  rpc Download(DownloadRequest) returns (DownloadResponse);
+}

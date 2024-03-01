@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  ml-api:
+    build: .
+    image: ml-api
+    command: python server.py
+    ports:
+      - "50051:50052"
+    restart: unless-stopped

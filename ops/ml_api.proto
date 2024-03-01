@@ -54,6 +54,6 @@ message DownloadResponse {
 service MLService {
   rpc UploadData(UploadDataRequest) returns (UploadDataResponse);
   rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
-  rpc Action(ActionRequest) returns (ActionResponse);
+  rpc ExecuteAction(ActionRequest) returns (ActionResponse);
   rpc Download(DownloadRequest) returns (DownloadResponse);
 }

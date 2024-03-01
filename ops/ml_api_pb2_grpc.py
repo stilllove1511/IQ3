@@ -24,8 +24,8 @@ class MLServiceStub(object):
                 request_serializer=ops_dot_ml__api__pb2.GetStatusRequest.SerializeToString,
                 response_deserializer=ops_dot_ml__api__pb2.GetStatusResponse.FromString,
                 )
-        self.Action = channel.unary_unary(
-                '/ml_api.MLService/Action',
+        self.ExecuteAction = channel.unary_unary(
+                '/ml_api.MLService/ExecuteAction',
                 request_serializer=ops_dot_ml__api__pb2.ActionRequest.SerializeToString,
                 response_deserializer=ops_dot_ml__api__pb2.ActionResponse.FromString,
                 )
@@ -51,7 +51,7 @@ class MLServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Action(self, request, context):
+    def ExecuteAction(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -76,8 +76,8 @@ def add_MLServiceServicer_to_server(servicer, server):
                     request_deserializer=ops_dot_ml__api__pb2.GetStatusRequest.FromString,
                     response_serializer=ops_dot_ml__api__pb2.GetStatusResponse.SerializeToString,
             ),
-            'Action': grpc.unary_unary_rpc_method_handler(
-                    servicer.Action,
+            'ExecuteAction': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExecuteAction,
                     request_deserializer=ops_dot_ml__api__pb2.ActionRequest.FromString,
                     response_serializer=ops_dot_ml__api__pb2.ActionResponse.SerializeToString,
             ),
@@ -131,7 +131,7 @@ class MLService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def Action(request,
+    def ExecuteAction(request,
             target,
             options=(),
             channel_credentials=None,
@@ -141,7 +141,7 @@ class MLService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ml_api.MLService/Action',
+        return grpc.experimental.unary_unary(request, target, '/ml_api.MLService/ExecuteAction',
             ops_dot_ml__api__pb2.ActionRequest.SerializeToString,
             ops_dot_ml__api__pb2.ActionResponse.FromString,
             options, channel_credentials,

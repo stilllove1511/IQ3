@@ -4,10 +4,10 @@ import transformers
 from datetime import datetime
 from dotenv import load_dotenv
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
-from peft import prepare_model_for_kbit_training, Loraconfig, get_perf_model
+from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
 from accelerate import FullyShardedDataParallelPlugin, Accelerator
 from torch.distributed.fsdp.fully_sharded_data_parallel import (
-    FullOptimStatedictConfig,
+    FullOptimStateDictConfig,
     FullyShardedDataParallel,
 )
 from huggingface_hub import login
@@ -58,7 +58,7 @@ class Trainer:
         self.model.gradient_checkpointing_enable()
         self.model = prepare_model_for_kbit_training(self.model)
 
-        self.lora_cfg = Loraconfig(
+        self.lora_cfg = LoraConfig(
             r=32,
             lora_alpha=64,
             target_modules=[
@@ -76,14 +76,14 @@ class Trainer:
             task_type="Causal_LM",
         )
 
-        self.model = get_perf_model(self.model, self.lora_cfg)
+        self.model = get_peft_model(self.model, self.lora_cfg)
 
     def setup_accelerator(self):
         fsdp_plugin = FullyShardedDataParallelPlugin(
-            state_dict_config=FullOptimStatedictConfig(
+            state_dict_config=FullOptimStateDictConfig(
                 offload_to_cpu=True, rank0_only=False
             ),
-            optim_state_dict_config=FullOptimStatedictConfig(
+            optim_state_dict_config=FullOptimStateDictConfig(
                 offload_to_cpu=True, rank0_only=False
             ),
         )
@@ -149,7 +149,7 @@ class Trainer:
         # Release memory
         del self.model
         del self.tokenizer
-        tourch.cuda.empty_cache()
+        torch.cuda.empty_cache()
 
         if is_logged:
             active_run = mlflow.active_run()
